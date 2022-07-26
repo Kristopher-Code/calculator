@@ -6,6 +6,8 @@ const clearButton = document.getElementById("clear-btn");
 const deleteButton = document.getElementById("delete-btn");
 const equalsButton = document.getElementById("equals-btn");
 const decimalButton = document.getElementById("decimal-btn");
+const pwrButton = document.getElementById("2n-btn");
+const sqrtButton = document.getElementById("sqrt-btn");
 
 let numberA = "";
 let numberB = "";
@@ -15,6 +17,8 @@ deleteButton.onclick = () => deleteEntry();
 clearButton.onclick = () => clearCalculator();
 decimalButton.onclick = () => appendDecimal();
 equalsButton.onclick = () => calculationResult();
+pwrButton.onclick = () => powerNumber();
+sqrtButton.onclick = () => sqrtNumber();
 
 numberButtons.forEach((button) =>
   button.addEventListener("click", () => appendNumber(button.textContent))
@@ -58,6 +62,14 @@ deleteEntry = () => {
 
 roundNumber = (n) => {
   return Math.round(n * 10000) / 10000;
+};
+
+sqrtNumber = () => {
+  return (displayBottom.textContent = Math.sqrt(displayBottom.textContent));
+};
+
+powerNumber = () => {
+  return (displayBottom.textContent = Math.pow(displayBottom.textContent, 2));
 };
 
 calculationResult = () => {
