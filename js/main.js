@@ -5,57 +5,72 @@ const numberButtons = document.querySelectorAll("[data-number]");
 const clearButton = document.getElementById("clear-btn");
 const deleteButton = document.getElementById("delete-btn");
 const equalsButton = document.getElementById("equals-btn");
+const decimalButton = document.getElementById("decimal-btn");
 
 let numberA = "";
 let numberB = "";
-let savedOperator = "";
-let result = null;
-let haveDecimal = false;
+let savedOperator = null;
 
+deleteButton.onclick = () => deleteEntry();
 clearButton.onclick = () => clearCalculator();
-deleteButton.onclick = () => deleteNumber();
-equalsButton.onclick = () => completeOperation(savedOperator);
+decimalButton.onclick = () => appendDecimal();
+equalsButton.onclick = () => calculationResult();
 
-numberButtons.forEach((button) => {
-  button.addEventListener("click", (e) => {
-    if (e.target.textContent === "." && !haveDecimal) {
-      haveDecimal = true;
-    } else if (e.target.textContent === "." && haveDecimal) {
-      return;
-    }
-    numberB += e.target.textContent;
-    displayBottom.innerText = numberB;
-  });
-});
-
-operandButtons.forEach((operand) =>
-  operand.addEventListener("click", (e) => {
-    if (!numberB) return;
-    haveDecimal = false;
-    const operandSelection = e.target.innerText;
-    if (numberA && numberB && savedOperator) {
-      completeOperation();
-    } else {
-      result = Number(numberB);
-    }
-    savedOperator = operandSelection;
-    clearCalculator(savedOperator);
-    console.log(result);
-  })
+numberButtons.forEach((button) =>
+  button.addEventListener("click", () => appendNumber(button.textContent))
+);
+operandButtons.forEach((button) =>
+  button.addEventListener("click", () => appendOperator(button.textContent))
 );
 
-clearCalculator = (name = "") => {
-  numberA += numberB + " " + name + "";
-  displayTop.textContent = numberA;
-  displayBottom.textContent = "";
-  numberB = "";
+appendDecimal = () => {
+  if (displayBottom.textContent.includes(".")) return;
+  displayBottom.textContent += ".";
 };
 
-completeOperation = (savedOperator, a, b) => {
-  a = parseFloat(numberA);
-  b = parseFloat(numberB);
-  console.log(savedOperator, a, b);
-  switch (savedOperator) {
+appendNumber = (n) => {
+  if (displayBottom.textContent === "0") {
+    displayBottom.textContent = "";
+  }
+  displayBottom.textContent += n;
+};
+
+appendOperator = (operand) => {
+  if (savedOperator !== null) calculationResult();
+  numberA = displayBottom.textContent;
+  savedOperator = operand;
+  displayTop.textContent = `${numberA} ${savedOperator}`;
+  displayBottom.textContent = "";
+};
+
+clearCalculator = () => {
+  displayBottom.textContent = "0";
+  displayTop.textContent = "";
+  numberA = "";
+  numberB = "";
+  savedOperator = null;
+};
+
+deleteEntry = () => {
+  displayBottom.textContent = displayBottom.textContent.slice(0, -1);
+};
+
+calculationResult = () => {
+  numberB = displayBottom.textContent;
+  displayBottom.textContent = completeCalculation(
+    numberA,
+    savedOperator,
+    numberB
+  );
+  displayTop.textContent = `${numberA} ${savedOperator} ${numberB}`;
+  savedOperator = null;
+};
+
+completeCalculation = (a, operand, b) => {
+  a = Number(a);
+  b = Number(b);
+  console.log(operand, a, b);
+  switch (operand) {
     case "+":
       return addition(a, b);
 
@@ -69,9 +84,6 @@ completeOperation = (savedOperator, a, b) => {
       return multiply(a, b);
   }
 };
-
-deleteNumber = () => {};
-addDecimal = () => {};
 
 addition = (a, b) => {
   return a + b;
