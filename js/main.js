@@ -76,7 +76,6 @@ calculationResult = () => {
   );
 
   document.getElementById("delete-btn").disabled = true;
-  document.getElementById("equals-btn").disabled = true;
   displayTop.textContent = `${numberA} ${savedOperator} ${numberB}`;
   savedOperator = null;
 };
