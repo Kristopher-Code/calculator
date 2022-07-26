@@ -41,6 +41,7 @@ appendOperator = (operand) => {
   savedOperator = operand;
   displayTop.textContent = `${numberA} ${savedOperator}`;
   displayBottom.textContent = "";
+  document.getElementById("delete-btn").disabled = false;
 };
 
 clearCalculator = () => {
@@ -49,19 +50,33 @@ clearCalculator = () => {
   numberA = "";
   numberB = "";
   savedOperator = null;
+  document.getElementById("delete-btn").disabled = false;
+  document.getElementById("equals-btn").disabled = false;
 };
 
 deleteEntry = () => {
   displayBottom.textContent = displayBottom.textContent.slice(0, -1);
 };
 
+roundNumber = (n) => {
+  return Math.round(n * 10000) / 10000;
+};
+
 calculationResult = () => {
+  if (savedOperator === "/" && displayBottom.textContent === "0") {
+    savedOperator = null;
+    displayBottom.textContent = "Infinity";
+    document.getElementById("equals-btn").disabled = true;
+    document.getElementById("delete-btn").disabled = true;
+    return;
+  }
   numberB = displayBottom.textContent;
-  displayBottom.textContent = completeCalculation(
-    numberA,
-    savedOperator,
-    numberB
+  displayBottom.textContent = roundNumber(
+    completeCalculation(numberA, savedOperator, numberB)
   );
+
+  document.getElementById("delete-btn").disabled = true;
+  document.getElementById("equals-btn").disabled = true;
   displayTop.textContent = `${numberA} ${savedOperator} ${numberB}`;
   savedOperator = null;
 };
