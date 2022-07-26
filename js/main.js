@@ -50,8 +50,6 @@ clearCalculator = () => {
   numberA = "";
   numberB = "";
   savedOperator = null;
-  document.getElementById("delete-btn").disabled = false;
-  document.getElementById("equals-btn").disabled = false;
 };
 
 deleteEntry = () => {
@@ -63,10 +61,10 @@ roundNumber = (n) => {
 };
 
 calculationResult = () => {
+  if (savedOperator === null) return;
   if (savedOperator === "/" && displayBottom.textContent === "0") {
     savedOperator = null;
     displayBottom.textContent = "Infinity";
-    document.getElementById("equals-btn").disabled = true;
     document.getElementById("delete-btn").disabled = true;
     return;
   }
